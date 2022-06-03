@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 def q(t):
     ''' Parameter shift function '''                                 
-    return 2*(np.tanh(r*t)+ 1)
+    return 2*(np.tanh(t)+ 1)
 
 
 def pba(dt = 0.01, N = 50000, K = 8000, dt_samp = 50,
@@ -34,11 +34,7 @@ def pba(dt = 0.01, N = 50000, K = 8000, dt_samp = 50,
     thet = np.random.uniform(0, 2*np.pi, size=K)
     Z[0,:] = r0*np.cos(thet); Z[1,:] = r0*np.sin(thet)
     Z_vid = np.zeros((2, N_samp, K))
-    
-    # define parameter shift function
-    def q(t):                                 
-       return 2*(np.tanh(r*t)+ 1)
-    
+        
     # define vector field (to be shifted)
     def f(Z):
         x = Z[0]; y = Z[1]
@@ -51,7 +47,7 @@ def pba(dt = 0.01, N = 50000, K = 8000, dt_samp = 50,
     # Solve system (using Euler mathod) 
     j = 0 
     for i in range(N-1):
-        qi = q(time[i])*np.ones(K)
+        qi = q(r*time[i])*np.ones(K)
         qi_stacked =  np.stack((qi, np.zeros(K)), 1).T
         Z_o = Z;
         Z = Z_o + dt*f(Z_o - qi_stacked)  

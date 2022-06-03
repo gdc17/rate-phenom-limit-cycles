@@ -60,9 +60,10 @@ gamma_r = np.zeros((2,K))
 gamma[0,:] = np.cos(thet); gamma[1,:] = np.sin(thet)
 gamma_r[0,:] = beta*np.cos(thet); gamma_r[1,:] = beta*np.sin(thet)
 
-#plt.plot(gamma[0,:], gamma[1,:], linewidth=2,color='black', label='$\Gamma$')
+plt.plot(gamma[0,:], gamma[1,:], linewidth=2,color='black', label='$\Gamma$')
 plt.plot(gamma_r[0,:], gamma_r[1,:], linewidth=3, color='red', label='$W^s(\Gamma)$')
+plt.ylabel('$x_2$', fontsize=14); plt.xlabel('$x_1$', fontsize=14)
 plt.legend()
-plt.ylim([-1.52, -1.4]); plt.xlim([-0.1, 0.1])
+#plt.ylim([-1.52, -1.4]); plt.xlim([-0.1, 0.1])
 
 
