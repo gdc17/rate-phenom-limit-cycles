@@ -12,8 +12,18 @@ import matplotlib.pyplot as plt
 
 
 def q(t):
-    ''' Parameter shift function '''                                 
+    ''' Asymptotically autonomous parameter shift function '''                                 
     return 2*(np.tanh(t)+ 1)
+
+# define vector field (to be shifted)
+def f(Z):
+    ''' Vector field to be horizontally shifted'''
+    x = Z[0]; y = Z[1]
+    r2 = x**2 + y**2
+    r = np.sqrt(r2)
+    f1 = x*(1 - r)*(1 - bet*r) - y*(1 + b*r2)
+    f2 = y*(1 - r)*(1 - bet*r) + x*(1 + b*r2)
+    return np.array([f1,f2])
 
 
 def pba(dt = 0.01, N = 50000, K = 8000, dt_samp = 50,
@@ -34,16 +44,7 @@ def pba(dt = 0.01, N = 50000, K = 8000, dt_samp = 50,
     thet = np.random.uniform(0, 2*np.pi, size=K)
     Z[0,:] = r0*np.cos(thet); Z[1,:] = r0*np.sin(thet)
     Z_vid = np.zeros((2, N_samp, K))
-        
-    # define vector field (to be shifted)
-    def f(Z):
-        x = Z[0]; y = Z[1]
-        r2 = x**2 + y**2
-        r = np.sqrt(r2)
-        f1 = x*(1 - r)*(1 - bet*r) - y*(1 + b*r2)
-        f2 = y*(1 - r)*(1 - bet*r) + x*(1 + b*r2)
-        return np.array([f1,f2])
-    
+            
     # Solve system (using Euler mathod) 
     j = 0 
     for i in range(N-1):
@@ -60,7 +61,21 @@ def pba(dt = 0.01, N = 50000, K = 8000, dt_samp = 50,
 
 #------------------------------------------------------------------------------
 
-def prm(pba, extra = 1):  
+def circ_diff(x,y):
+    ''' Defines flat metric on circle parametersied from 0 to 2pi' to 
+        calculate derivatives'''
+    d1 = x - y
+    d2 = -(y - x + 2*np.pi)
+    d3 = x - y + 2*np.pi
+    if np.abs(d1) <= np.abs(d2) and np.abs(d1) <= np.abs(d3):
+        return d1
+    elif np.abs(d2) <= np.abs(d1) and np.abs(d2) <= np.abs(d3):
+        return d2
+    else: 
+        return d3
+
+
+def prm(pba, extra = True):  
     '''Returns the phase response map and takes the output of the pba function
        as an input. Returns the data of the phase response along with some
        extra properties'''
@@ -73,21 +88,8 @@ def prm(pba, extra = 1):
     sort_inds = np.argsort(theta0)
     theta0 = theta0[sort_inds]
     theta1 = theta1[sort_inds]
-    
-    def circ_diff(x,y):
-        ''' Defines flat metric on circle parametersied from 0 to 2pi' to 
-            calculate derivatives'''
-        d1 = x - y
-        d2 = -(y - x + 2*np.pi)
-        d3 = x - y + 2*np.pi
-        if np.abs(d1) <= np.abs(d2) and np.abs(d1) <= np.abs(d3):
-            return d1
-        elif np.abs(d2) <= np.abs(d1) and np.abs(d2) <= np.abs(d3):
-            return d2
-        else: 
-            return d3
-     
-    if extra == 1:
+         
+    if extra == True:
         dF = np.zeros(K-1)
         lift = np.zeros(K)
         dtheta = np.diff(theta0)
