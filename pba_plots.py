@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Mar  5 21:52:41 2022
+Created on Fri Jun  3 23:05:01 2022
 
 @author: gdc17
 """
 
+
 import numpy as np
 import matplotlib.pyplot as plt
 import limit_cycle_functions as lc
-
-
-
 
 def generate_pba_plots_intro(r, t):
     dt = 0.001     # size of time-step
@@ -32,16 +30,16 @@ def generate_pba_plots_intro(r, t):
     # Construct the frozen in time attracting and repelling limit cycle 
     thet = np.linspace(0, 2*np.pi, num=K)
     gamma = np.zeros((2,K)); gamma[0,:] = np.cos(thet); gamma[1,:] = np.sin(thet)
-    gamma_r = np.zeros((2,K))
-    gamma_r[0,:] = (1/bet)*np.cos(thet); gamma_r[1,:] = (1/bet)*np.sin(thet)
+    upsilon = np.zeros((2,K))
+    upsilon[0,:] = (1/bet)*np.cos(thet); upsilon[1,:] = (1/bet)*np.sin(thet)
     
     # Plot the t fibre of the pullback attracting along with frozen in time objects
     plt.figure(figsize=(4,4))
     plt.plot(gamma[0,:]+ lc.q(r*time), gamma[1,:], color='blue',
              label='$\Gamma_{\\lambda(rt)}$', linewidth=0.5)
-    #plt.plot(gamma_r[0,:]+q(time), gamma_r[1,:], color='red',
-    #         label='$\\Upsilon_{\\lambda(rt)}$', linewidth=0.5)
-    #plt.scatter([q(time)], [0], color='black', label='$R_{\lambda(rt)}$')
+    plt.plot(upsilon[0,:]+lc.q(r*time), upsilon[1,:], color='red',
+             label='$\\Upsilon_{\\lambda(rt)}$', linewidth=0.5)
+    plt.scatter([lc.q(r*time)], [0], color='black', label='$R_{\lambda(rt)}$')
     plt.scatter(x[t,:],y[t,:], s=0.1, color='green')
     plt.plot([1],[1], color='green', label='$A_r(t)$')
     plt.ylim([-1.8, 1.8]), plt.xlim([-1.8+lc.q(r*time), 1.8+lc.q(r*time)])
@@ -57,10 +55,8 @@ def plot():
     for r in r_vals:
         for t in t_vals:
             generate_pba_plots_intro(r, t)
-
-print(__name__)   
-if __name__ == '__main__':
-    
+   
+if __name__ == '__main__':  
     plot()
 
 
